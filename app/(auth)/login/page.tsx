@@ -6,13 +6,16 @@ import { Suspense, useState } from "react";
 
 function LoginForm() {
   const searchParams = useSearchParams();
+  const errorCode = searchParams.get("error");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(
-    searchParams.get("error") === "unauthorized"
-      ? "Esta cuenta no tiene acceso al centro de control."
-      : "",
+    errorCode === "configuration"
+      ? "El acceso se habilitará cuando se agreguen las variables privadas en Vercel."
+      : errorCode === "unauthorized"
+        ? "Esta cuenta no tiene acceso al centro de control."
+        : "",
   );
   const [pending, setPending] = useState(false);
 
