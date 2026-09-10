@@ -5,6 +5,7 @@ import ObsLiveWizard from "@/components/admin/ObsLiveWizard";
 import SocialDestinationsManager, {
   type ConfiguredSocialDestination,
 } from "@/components/admin/SocialDestinationsManager";
+import TransmissionDecisionGuide from "@/components/admin/TransmissionDecisionGuide";
 import { authOptions } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/db";
 import { getRadioNowPlaying } from "@/lib/media";
@@ -63,7 +64,14 @@ export default async function MediaCenterPage() {
     process.env.ENCRYPTION_KEY && process.env.ENCRYPTION_KEY.length >= 32,
   );
   const radioReady = Boolean(
-    process.env.AZURACAST_BASE_URL && process.env.AZURACAST_STATION_SHORTCODE,
+    process.env.AZURACAST_BASE_URL &&
+    process.env.AZURACAST_STATION_SHORTCODE &&
+    process.env.AZURACAST_PUBLIC_STREAM_URL,
+  );
+  const radioControlReady = Boolean(
+    radioReady &&
+    process.env.AZURACAST_STATION_ID &&
+    process.env.AZURACAST_API_KEY,
   );
   const recentEvents = recentEventsResult.data || [];
   const configuredSocialDestinations = (
@@ -113,8 +121,8 @@ export default async function MediaCenterPage() {
           </h1>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-white/70 sm:text-base">
             OBS controla cámaras, micrófonos y escenas. Mux recibe una sola
-            señal y la distribuye a la web y a todas las redes sociales
-            elegidas.
+            señal y la distribuye a la web y a las redes elegidas. Aitum queda
+            documentado como respaldo gratuito para emergencias.
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <StatusBadge ready={muxReady} label="Mux" />
@@ -274,6 +282,8 @@ export default async function MediaCenterPage() {
           encryptionReady={encryptionReady}
         />
 
+        <TransmissionDecisionGuide />
+
         <section className="mt-6 rounded-3xl border border-gray-200 bg-white p-5 shadow-sm sm:p-7">
           <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#00498d]">
             Configuración inicial · sólo una vez
@@ -349,13 +359,20 @@ export default async function MediaCenterPage() {
                     <br />
                     AZURACAST_STATION_SHORTCODE
                     <br />
+                    AZURACAST_STATION_ID
+                    <br />
                     AZURACAST_PUBLIC_STREAM_URL
+                    <br />
+                    AZURACAST_API_KEY
                   </td>
                   <td className="px-3 py-4">
-                    Reproductor, canción actual y oyentes de la radio.
+                    Reproductor, AutoDJ, estado y controles seguros de la radio.
                   </td>
                   <td className="px-3 py-4">
-                    <StatusBadge ready={radioReady} label="Radio" />
+                    <div className="flex flex-wrap gap-2">
+                      <StatusBadge ready={radioReady} label="Radio" />
+                      <StatusBadge ready={radioControlReady} label="Control" />
+                    </div>
                   </td>
                 </tr>
               </tbody>

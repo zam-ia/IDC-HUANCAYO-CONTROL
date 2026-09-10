@@ -28,6 +28,23 @@ Para la radio se agregan `AZURACAST_BASE_URL`, `AZURACAST_STATION_SHORTCODE` y `
 
 Mux notificará a la web cuando la señal empiece y termine, y reportará el estado de cada red por separado. El operador no necesita configurar múltiples salidas en OBS ni cambiar manualmente el estado salvo en una contingencia.
 
+## Perfil de contingencia con Aitum
+
+Preparar con anticipación un segundo perfil de OBS llamado `IDC - Respaldo directo`. Instalar Aitum Multistream únicamente desde sus versiones oficiales: <https://github.com/Aitum/obs-aitum-multistream/releases>
+
+En ese perfil se configuran directamente las llaves de cada red. No se usa al mismo tiempo que el perfil Mux salvo durante una prueba controlada. Cada salida adicional consume ancho de banda y recursos de la computadora; con cuatro salidas de 6 Mbps se recomienda disponer de 36 a 48 Mbps de subida estable.
+
+Usar este perfil sólo cuando Mux no pueda recibir señal:
+
+1. detener la transmisión del perfil principal;
+2. cambiar al perfil `IDC - Respaldo directo`;
+3. activar únicamente las redes indispensables;
+4. comprobar cada red desde otro dispositivo;
+5. mantener la grabación local en MKV;
+6. volver al perfil Mux en el siguiente evento y registrar la incidencia.
+
+El respaldo directo no alimenta automáticamente el reproductor `/en-vivo`, no genera replay en Mux y no actualiza sus estados por webhook.
+
 ## Recomendación de salida
 
 - Resolución: 1920×1080 o 1280×720 si la conexión es limitada.

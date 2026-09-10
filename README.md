@@ -21,13 +21,15 @@ El proyecto está separado del sitio público para reducir su superficie de ataq
 IDC-HUANCAYO-CONTROL (privado) ──administra──> Supabase
                 │                                ▲
                 ├──crea señal/destinos──> Mux ──webhooks
-                └──supervisa────────────> AzuraCast
+                └──supervisa/controla───> AzuraCast (VPS)
 
 OBS ──una salida RTMPS──> Mux ──> idc-huancayo.vercel.app/en-vivo
                               ├─> YouTube
                               ├─> Facebook
                               ├─> Instagram
                               └─> TikTok
+
+OBS (perfil de contingencia) ──Aitum──> redes sociales directas
 
 IDC-HUANCAYO (público) ──sólo lectura pública──> Supabase / Mux / AzuraCast
 ```
@@ -46,19 +48,23 @@ Completa `.env.local` con credenciales de desarrollo. Los archivos `.env*` está
 
 ## Variables de entorno
 
-| Variable                        | Exposición | Propósito                                |
-| ------------------------------- | ---------- | ---------------------------------------- |
-| `NEXTAUTH_URL`                  | servidor   | URL del despliegue de control            |
-| `NEXTAUTH_SECRET`               | servidor   | firma de sesiones administrativas        |
-| `NEXT_PUBLIC_MAIN_SITE_URL`     | pública    | enlace al sitio que administra           |
-| `NEXT_PUBLIC_SUPABASE_URL`      | pública    | URL del proyecto compartido              |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | pública    | cliente Supabase limitado por RLS        |
-| `SUPABASE_SERVICE_ROLE_KEY`     | servidor   | operaciones administrativas              |
-| `MUX_TOKEN_ID`                  | servidor   | creación de señales Mux                  |
-| `MUX_TOKEN_SECRET`              | servidor   | autenticación Mux                        |
-| `MUX_WEBHOOK_SECRET`            | servidor   | validación de webhooks Mux               |
-| `ENCRYPTION_KEY`                | servidor   | cifrado AES-256-GCM de destinos sociales |
-| `AZURACAST_*`                   | servidor   | estado, reproducción y gestión de radio  |
+| Variable                        | Exposición | Propósito                                 |
+| ------------------------------- | ---------- | ----------------------------------------- |
+| `NEXTAUTH_URL`                  | servidor   | URL del despliegue de control             |
+| `NEXTAUTH_SECRET`               | servidor   | firma de sesiones administrativas         |
+| `NEXT_PUBLIC_MAIN_SITE_URL`     | pública    | enlace al sitio que administra            |
+| `NEXT_PUBLIC_SUPABASE_URL`      | pública    | URL del proyecto compartido               |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | pública    | cliente Supabase limitado por RLS         |
+| `SUPABASE_SERVICE_ROLE_KEY`     | servidor   | operaciones administrativas               |
+| `MUX_TOKEN_ID`                  | servidor   | creación de señales Mux                   |
+| `MUX_TOKEN_SECRET`              | servidor   | autenticación Mux                         |
+| `MUX_WEBHOOK_SECRET`            | servidor   | validación de webhooks Mux                |
+| `ENCRYPTION_KEY`                | servidor   | cifrado AES-256-GCM de destinos sociales  |
+| `AZURACAST_BASE_URL`            | servidor   | URL de la instalación de radio            |
+| `AZURACAST_STATION_SHORTCODE`   | servidor   | consulta pública de canción y oyentes     |
+| `AZURACAST_PUBLIC_STREAM_URL`   | servidor   | audio que reproduce el sitio              |
+| `AZURACAST_STATION_ID`          | servidor   | ID numérico para acciones administrativas |
+| `AZURACAST_API_KEY`             | servidor   | control protegido de AutoDJ y emisión     |
 
 `ENCRYPTION_KEY` debe contener al menos 32 caracteres aleatorios y no debe cambiarse después de guardar destinos, salvo que se vuelvan a cargar todas las credenciales.
 
@@ -98,4 +104,9 @@ La segunda migración crea una bóveda de destinos sin políticas de lectura par
 - El webhook rechaza mensajes con firma inválida o antigüedad superior a cinco minutos.
 - El repositorio puede permanecer público durante la instalación porque sólo contiene nombres de variables vacíos; se recomienda convertirlo en privado antes de iniciar operaciones reales.
 
-Más detalles en [docs/multitransmision-mux.md](docs/multitransmision-mux.md) y [docs/guia-operador-obs.md](docs/guia-operador-obs.md).
+Más detalles:
+
+- [Decisión de arquitectura y alternativas](docs/decision-radio-video.md)
+- [Instalación de AzuraCast](docs/instalacion-azuracast.md)
+- [Multitransmisión con Mux](docs/multitransmision-mux.md)
+- [Guía del operador de OBS](docs/guia-operador-obs.md)
