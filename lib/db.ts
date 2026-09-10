@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
+import { publicSupabaseUrl } from "@/lib/supabase-config";
 
 export type UserRole =
   | "student"
@@ -76,7 +77,7 @@ export interface CampusEvent {
   created_at: string;
 }
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = publicSupabaseUrl;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export const supabaseAdmin =

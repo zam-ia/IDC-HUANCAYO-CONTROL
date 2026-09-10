@@ -2,9 +2,10 @@ import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { createClient } from "@supabase/supabase-js";
 import { isAdminRole } from "@/lib/roles";
+import { publicSupabaseKey, publicSupabaseUrl } from "@/lib/supabase-config";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = publicSupabaseUrl;
+const supabaseAnonKey = publicSupabaseKey;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const authConfigured = Boolean(
   supabaseUrl && supabaseAnonKey && supabaseServiceKey,
